@@ -58,23 +58,39 @@ public class CommandModule extends ListenerAdapter {
         }
         if (message[0].equals("q!put")) {
             if (message.length == 3) {
-                //todo gg
+                Game game = getGameByPlayerID(user.getId());
+                if (game != null) {
+                    try {
+                        int m = Integer.parseInt(message[1]);
+                        int n = Integer.parseInt(message[2]);
+                        game.put(user.getId(), m, n);
+                    } catch (NumberFormatException e) {
+                        channel.sendMessage(":warning: You need to input round numbers in range from 0 to 7").queue();
+                    }
+                } else {
+                    channel.sendMessage("You are not in the game").queue();
+                }
             } else {
                 channel.sendMessage("Command requires 2 arguments: `q!put <m> <n>`").queue();
             }
             return;
         }
         if (message[0].equals("q!games")) {
-            StringBuilder content = new StringBuilder("==== Available games ====" + System.lineSeparator());
             Vector<Game> games = Game.getAllGames();
-            for (Game game : games) {
-                if (channel.getGuild().getChannels().stream().map(GuildChannel::getId).anyMatch(s -> game.getChannel().equals(s))) {
-                    content.append(game.toString());
-                    content.append(System.lineSeparator());
+            if (games.size() != 0) {
+                StringBuilder content = new StringBuilder("==== Available games ====" + System.lineSeparator());
+
+                for (Game game : games) {
+                    if (channel.getGuild().getChannels().stream().map(GuildChannel::getId).anyMatch(s -> game.getChannel().equals(s))) {
+                        content.append(game.toString());
+                        content.append(System.lineSeparator());
+                    }
                 }
+                content.append("==== Total: ").append(games.size()).append(" ====");
+                channel.sendMessage(content).queue();
+            } else {
+                channel.sendMessage("There are currently no active games!").queue();
             }
-            content.append("==== Total: ").append(games.size()).append("====");
-            channel.sendMessage(content).queue();
         }
     }
 

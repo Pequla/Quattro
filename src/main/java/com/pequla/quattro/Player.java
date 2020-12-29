@@ -56,6 +56,6 @@ public class Player {
         if (avatar == AvatarType.YELLOW) {
             return ":green_square:";
         }
-        return ":36393F:";
+        return ":black_circle:";
     }
 }

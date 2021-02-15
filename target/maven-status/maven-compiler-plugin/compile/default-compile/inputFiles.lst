@@ -1,4 +1,12 @@
-C:\Users\petar\IdeaProjects\Quattro\src\main\java\com\pequla\quattro\Game.java
-C:\Users\petar\IdeaProjects\Quattro\src\main\java\com\pequla\quattro\Main.java
-C:\Users\petar\IdeaProjects\Quattro\src\main\java\com\pequla\quattro\Player.java
-C:\Users\petar\IdeaProjects\Quattro\src\main\java\com\pequla\quattro\CommandModule.java
+C:\JavaProjects\Quattro\src\main\java\com\pequla\quattro\modules\commands\CreateCommand.java
+C:\JavaProjects\Quattro\src\main\java\com\pequla\quattro\modules\commands\PutCommand.java
+C:\JavaProjects\Quattro\src\main\java\com\pequla\quattro\Main.java
+C:\JavaProjects\Quattro\src\main\java\com\pequla\quattro\modules\commands\GuildCommand.java
+C:\JavaProjects\Quattro\src\main\java\com\pequla\quattro\modules\commands\BoardTestCommand.java
+C:\JavaProjects\Quattro\src\main\java\com\pequla\quattro\modules\commands\GamesCommand.java
+C:\JavaProjects\Quattro\src\main\java\com\pequla\quattro\modules\CommandModule.java
+C:\JavaProjects\Quattro\src\main\java\com\pequla\quattro\Quattro.java
+C:\JavaProjects\Quattro\src\main\java\com\pequla\quattro\modules\commands\LeaveCommand.java
+C:\JavaProjects\Quattro\src\main\java\com\pequla\quattro\game\Game.java
+C:\JavaProjects\Quattro\src\main\java\com\pequla\quattro\game\Player.java
+C:\JavaProjects\Quattro\src\main\java\com\pequla\quattro\modules\commands\JoinCommand.java

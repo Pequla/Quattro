@@ -25,7 +25,12 @@ public class CommandModule extends ListenerAdapter {
         map.put(prefix + "p", new PutCommand());
         map.put(prefix + "games", new GamesCommand());
         map.put(prefix + "g", new GamesCommand());
-        map.put(prefix + "test", new BoardTestCommand());
+        map.put(prefix + "help", new HelpCommand());
+        map.put(prefix + "h", new HelpCommand());
+        map.put(prefix + "invite", new InviteCommand());
+        map.put(prefix + "i", new InviteCommand());
+        map.put(prefix + "tutorial", new TutorialCommand());
+        map.put(prefix + "t", new TutorialCommand());
     }
 
     @Override

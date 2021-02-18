@@ -1,9 +1,13 @@
 package com.pequla.quattro.game;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
+import java.awt.*;
+import java.time.Instant;
 import java.util.List;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -104,35 +108,46 @@ public class Game {
             Player playerOnTurn = players.elementAt(onTurn);
             if (playerOnTurn.getId().equals(id)) {
                 if (isInRange(m, n)) {
-                    for (Player player : players) {
-                        if (player.getId().equals(id)) {
-                            board[m][n] = player;
-                            sendMessage(String.format("You moved to [%s][%s]", m, n));
-                            printBoard();
-                            if (onTurn == 3) {
-                                onTurn = 0;
-                            } else {
-                                onTurn++;
-                            }
+                    if (board[m][n].getAvatar() == Player.AvatarType.EMPTY) {
+                        for (Player player : players) {
+                            if (player.getId().equals(id)) {
+                                board[m][n] = player;
+                                sendMessage(String.format("You moved to [%s][%s]", m, n));
+                                printBoard();
+                                if (onTurn == 3) {
+                                    onTurn = 0;
+                                } else {
+                                    onTurn++;
+                                }
 
-                            // Check for a winner
-                            Player p = checkForWinner(m, n);
-                            if (p != null) {
-                                // Yes there is a winner
-                                sendMessage(MarkdownUtil.bold("WINNER FOUND: " + jda.retrieveUserById(p.getId()).complete().getAsMention()));
-                                allGames.remove(this);
-                                players.forEach(pl -> pl.setGame(null));
-                                inProgress = false;
-                                sendMessage("To play gain create a game using q!create command!!!");
+                                // Check for a winner
+                                Player p = checkForWinner(m, n);
+                                if (p != null) {
+                                    // Yes there is a winner
+                                    sendMessage(new EmbedBuilder()
+                                            .setColor(Color.CYAN)
+                                            .setAuthor(p.getName(), null, p.getIconUrl())
+                                            .setTitle(MarkdownUtil.bold("WINNER FOUND"))
+                                            .setDescription("Winner was found, to play again create a new game using q!create command")
+                                            .addField("Winner:", p.getName(), false)
+                                            .addField("Game owner:", owner.getName(), false)
+                                            .setTimestamp(Instant.now())
+                                            .build());
+                                    allGames.remove(this);
+                                    players.forEach(pl -> pl.setGame(null));
+                                    inProgress = false;
+                                }
+                                return;
                             }
-                            return;
                         }
+                    } else {
+                        sendMessage("Field is already occupied! Please chose another one!");
                     }
                 } else {
                     sendMessage("Cords must be in range from 0 to 7");
                 }
             } else {
-                sendMessage("You need to be on turn, currently " + playerOnTurn.getAvatarEmoji() + " is on turn");
+                sendMessage("You need to be on turn, currently " + playerOnTurn.getName() + " (" + playerOnTurn.getAvatarEmoji() + ") is on turn");
             }
         } else {
             sendMessage("Game hasn't started yet!");
@@ -311,39 +326,6 @@ public class Game {
         return m >= 0 && m < 8 && n >= 0 && n < 8;
     }
 
-    // The whole winner logic
-    private Player isWinner(int i, int j, int m, int n) {
-        int a = i;
-        int b = j;
-        int counter = 2;
-
-        for (int k = 0; k < 3; k++) {
-            a -= (i - m);
-            b -= (j - n);
-            if (board[a][b] != board[i][j]) break;
-            if (a != m || b != n) counter++;
-            if (counter == 4) {
-                return board[i][j];
-            }
-        }
-
-        a = i;
-        b = j;
-        counter = 2;
-        for (int k = 0; k < 3; k++) {
-            a += (i - m);
-            b += (j - n);
-            if (board[a][b] != board[i][j]) break;
-            if (a != m || b != n) counter++;
-            if (counter == 4) {
-                return board[i][j];
-            }
-        }
-
-        // Not found
-        return null;
-    }
-
     private Player.AvatarType pickAvatar() {
         List<Player.AvatarType> avatars = players.stream().map(Player::getAvatar).collect(Collectors.toList());
         if (!avatars.contains(Player.AvatarType.GREEN)) {
@@ -359,6 +341,13 @@ public class Game {
     }
 
     private void sendMessage(String message) {
+        TextChannel tc = jda.getTextChannelById(channel);
+        if (tc != null) {
+            tc.sendMessage(message).queue();
+        }
+    }
+
+    private void sendMessage(MessageEmbed message) {
         TextChannel tc = jda.getTextChannelById(channel);
         if (tc != null) {
             tc.sendMessage(message).queue();
